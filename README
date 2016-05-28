@@ -1,0 +1,60 @@
+Note: All references used are noted at the bottom of the README
+
+How to build:
+Run make in the folder.
+
+Implementation:
+
+Part 1)
+I have made use of libpcap library to write the code of dns inject. It takes an 
+input file in the form of 2 columns content in which the first column is the ip 
+address to which the given domain has to be directed. Please see the test.conf 
+sample file.
+
+The inject logic works only for dns A request as per requirement of the 
+assignment. Other type of requests are ignored.
+
+How to run:
+use sudo to run it. The tool supports following flags:
+sudo ./dnsinject [-i interface] [-f file] expression
+
+-i  Listen on network device <interface> (e.g., eth0). If not specified,
+	dnsinject should select a default interface to listen on.
+
+-f  Read the ip addresses and domains to be spoofed. If not specified, all dns 
+	queries would be spoofed towards the attacker's ip address
+
+expression : a bpf filter to deal with only a specific set of traffic. 
+	Optional parameter.
+
+Part 2)
+I have made use of libpcap library to write the code of dns detect. It looks 
+for dns responses and if there has been multiple responses for one dns 
+transaction id, it indicates that the spoofing attempt has been main and 
+displayes all the ip addresses in the spoofed dns response packets.
+
+The detect logic works only for dns A request as per requirement of the 
+assignment. Other type of requests are ignored. The program is also capable to 
+analyze a pcap dump file for spoofed dns responses
+
+How to run:
+use sudo to run it. The tool supports following flags:
+sudo ./dnsdetect [-i interface] [-r pcacp dump file] expression
+
+-i  Listen on network device <interface> (e.g., eth0). If not specified,
+	dnsinject should select a default interface to listen on.
+
+-r  A pcap dump file that you would like to analyze.
+
+expression : a bpf filter to deal with only a specific set of traffic.
+	Optional parameter.
+
+
+References:
+1. http://fossies.org/dox/dsniff-2.4b2/dnsspoof_8c_source.html
+	Made use of the code found above to see how the dns packets are filled. The 
+	it has been filled is almost same.
+2. https://b4ldr.wordpress.com/2014/03/20/spoofing-dns-pcakets/
+3. http://www.binarytides.com/dns-query-code-in-c-with-linux-sockets/
+4. http://stackoverflow.com/questions/13439361/c-dns-query-to-structure
+5. The spoofed pcap file that I used for testing is from my friend Aadarsh Jajodia
